@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Article } from './article.model';
+
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  articles: Article[];
+
+  constructor() {
+    this.articles = [
+      new Article('The Angular 2 screencast', 'The easiest way to learn Angular 2'),
+      new Article('Real React', 'React 6'),
+      new Article('View', 'I dont know view'),
+    ];
+  }
 }
