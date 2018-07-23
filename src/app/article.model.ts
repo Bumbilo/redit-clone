@@ -4,4 +4,8 @@ export class Article {
         public description: string
     ) {
     }
+
+    public date(): Date {
+        return new Date();
+    }
 }

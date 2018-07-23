@@ -1,4 +1,23 @@
-<div id="sidebar">
-  <h2>{{article.title}}</h2>
-  <p>{{article.description}}</p>
+<div class="image">
+  <img src="http://placekitten.com/g/400/300" alt="cat"/>
+</div>
+<div class="content">
+  <div class="header">
+    {{ article.title }}
+  </div>
+  <div class="meta">
+    Voting and votes will go gere
+  </div>
+  <div class="meta date">
+    {{ article.date() | date:'medium' }}
+  </div>
+  <div class="meta description">
+    <p>{{ article.description }}</p>
+  </div>
+  <div class="extra">
+    <a href="$" target="_blank" class="ui right floated button primary">
+      Read more
+      <i class="right chevron icon"></i>
+    </a>
+  </div>
 </div>
