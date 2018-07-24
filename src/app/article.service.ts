@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Article } from './article.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 
-const baseUrl = 'https://newsapi.org';
-const newApiKey = '9cee674a9c414560a66ca702323a1ac0';
+import { Article } from './article.model';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class ArticleService {
@@ -15,15 +14,15 @@ export class ArticleService {
 
   public getArticles(): Promise<Article[]> {
     let params = new HttpParams()
-                    .set('apiKey', newApiKey)
+                    .set('apiKey', environment.newApiKey)
                     .set('q', 'apple');
 
       return this.http
-              .get(`${baseUrl}/v2/everything`, { params })
+              .get(`${environment.baseUrl}/v2/everything`, { params })
               .toPromise()
-              .then(resp => resp.articles)
-              .then(articles => articles.map((article) => Article.fromJSON(article)))
-              .catch(err => console.log(err))
+              .then((resp: Response) => resp.articles)
+              .then((articles) => articles.map((article) => Article.fromJSON(article)))
+              .catch((err: Error) => console.log(err))
   }
 
 }
