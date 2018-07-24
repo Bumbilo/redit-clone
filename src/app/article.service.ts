@@ -27,8 +27,15 @@ const sortByTime: ArticleSortOrderFn =
     return direction * (b.publishedAt.getTime() - a.publishedAt.getTime());
   };
 
+
+const sortByVotes: ArticleSortOrderFn =
+  (direction: number) => (a: Article, b: Article) => {
+    return direction * (b.votes - a.votes);
+  };
+
   const sortFns = {
-    'Time': sortByTime
+    'Time': sortByTime,
+    'Votes': sortByVotes,
   };
 
 @Injectable()
@@ -45,11 +52,21 @@ export class ArticleService {
   public articles: Observable<Article[]> = this._articles.asObservable();
   public orderedArticles: Observable<Article[]>;
 
-  constructor( private http: HttpClient ) { }
+  constructor( private http: HttpClient ) {
+    this.orderedArticles = Observable.combineLatest(
+      this._articles,
+      this._sortByFilterSubject,
+      this._sortByDirectionSubject
+    ).map(([
+      articles, sorter, direction
+    ]) => {
+      return articles.sort(sorter(direction))
+    })
+  }
 
   public sortBy( filter: string, direction: number ): void {
     this._sortByDirectionSubject.next(direction);
-    this._sortByFilterSubject.next(filter);
+    this._sortByFilterSubject.next(sortFns[filter]);
   }
 
   public getArticles(): void {
