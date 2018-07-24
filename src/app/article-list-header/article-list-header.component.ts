@@ -10,12 +10,12 @@ declare var jQuery: any;
 })
 export class ArticleListHeaderComponent implements OnInit {
   private currentFilter: string = 'Time';
-  private sortDerection: number = 1;
+  private sortDirection: number = 1;
 
   constructor(private articleService: ArticleService) { }
 
   changeDirection() {
-    this.sortDerection = this.sortDerection * -1;
+    this.sortDirection = this.sortDirection * -1;
     this._updateSort()
   }
 
@@ -29,8 +29,7 @@ export class ArticleListHeaderComponent implements OnInit {
   }
 
   _updateSort() {
-    // call sortBy on the article service
-    this.articleService.sortBy(this.currentFilter, this.sortDerection);
+    this.articleService.sortBy(this.currentFilter, this.sortDirection);
   }
 
   ngOnInit() {

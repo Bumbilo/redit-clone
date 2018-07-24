@@ -15,11 +15,11 @@ import { environment } from '../environments/environment';
  *  -1 == b comes before a
  */
 interface ArticleSortFn {
-    (a: Article, b: Article): number;
+  (a: Article, b: Article): number;
 }
 
 interface ArticleSortOrderFn {
-    (direction: number): ArticleSortFn;
+  (direction: number): ArticleSortFn;
 }
 
 const sortByTime: ArticleSortOrderFn =
@@ -27,32 +27,37 @@ const sortByTime: ArticleSortOrderFn =
     return direction * (b.publishedAt.getTime() - a.publishedAt.getTime());
   };
 
-
 const sortByVotes: ArticleSortOrderFn =
   (direction: number) => (a: Article, b: Article) => {
     return direction * (b.votes - a.votes);
   };
 
-  const sortFns = {
-    'Time': sortByTime,
-    'Votes': sortByVotes,
-  };
+const sortFns = {
+  'Time': sortByTime,
+  'Votes': sortByVotes,
+};
 
 @Injectable()
 export class ArticleService {
   private _articles: BehaviorSubject<Article[]> =
-  new BehaviorSubject<Article[]>([]);
+    new BehaviorSubject<Article[]>([]);
+
+  private _source: BehaviorSubject<any> =
+    new BehaviorSubject<any>([]);
 
   private _sortByDirectionSubject: BehaviorSubject<number> =
-  new BehaviorSubject(1);
+    new BehaviorSubject(1);
+  
+  private _filterBySubject: BehaviorSubject<string> =
+    new BehaviorSubject('');
 
-  private _sortByFilterSubject: BehaviorSubject<ArticleSortFn> =
-  new BehaviorSubject<ArticleSortFn>(sortByTime);
+  private _sortByFilterSubject: BehaviorSubject<ArticleSortOrderFn> =
+    new BehaviorSubject<ArticleSortOrderFn>(sortByTime);
 
   public articles: Observable<Article[]> = this._articles.asObservable();
   public orderedArticles: Observable<Article[]>;
 
-  constructor( private http: HttpClient ) {
+  constructor(private http: HttpClient) {
     this.orderedArticles = Observable.combineLatest(
       this._articles,
       this._sortByFilterSubject,
@@ -64,13 +69,13 @@ export class ArticleService {
     })
   }
 
-  public sortBy( filter: string, direction: number ): void {
+  public sortBy(filter: string, direction: number): void {
     this._sortByDirectionSubject.next(direction);
     this._sortByFilterSubject.next(sortFns[filter]);
   }
 
   public getArticles(): void {
-    this._makeHttpRequest('/v2/everything', 'angular')
+    this._makeHttpRequest('/v2/everything', 'front-end')
       .map(json => json.articles)
       .subscribe(ariclesJSON => {
         const articles = ariclesJSON.map(articJSON => Article.fromJSON(articJSON));
@@ -81,11 +86,11 @@ export class ArticleService {
   private _makeHttpRequest(path: string, sourceKey: string): Observable<any> {
     // Set query parameters
     let params = new HttpParams()
-                      .set('apiKey', environment.newApiKey)
-                      .set('q', sourceKey);
+      .set('apiKey', environment.newApiKey)
+      .set('q', sourceKey);
     // Return Http request
     return this.http
-            .get(`${environment.baseUrl}${path}`, { params })
-            .map(resp => resp)
+      .get(`${environment.baseUrl}${path}`, { params })
+      .map(resp => resp)
   }
 }
