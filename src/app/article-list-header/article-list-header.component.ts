@@ -23,17 +23,22 @@ export class ArticleListHeaderComponent implements OnInit {
     if (filter === this.currentFilter) {
       this.changeDirection();
     } else {
-        this.currentFilter = filter;
-        this._updateSort();
+      this.currentFilter = filter;
+      this._updateSort();
     }
   }
 
+  liveSearch(event) {
+    const { value } = event.target;
+    this.articleService.filterBy(value);
+  }
+
   _updateSort(): void {
-    this.articleService.sortBy(this.currentFilter, this.sortDirection);
+    this.articleService
+      .sortBy(this.currentFilter, this.sortDirection);
   }
 
   ngOnInit() {
     jQuery('.ui.dropdown').dropdown();
   }
-
 }

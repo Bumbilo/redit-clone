@@ -9,6 +9,8 @@ import { ArticleListComponent } from './article-list/article-list.component';
 
 import { ArticleService } from './article.service';
 import { ArticleListHeaderComponent } from './article-list-header/article-list-header.component';
+import { AboutComponent } from './about/about.component';
+import { appRoutes } from './app.routes';
 
 @NgModule({
   declarations: [
@@ -17,10 +19,12 @@ import { ArticleListHeaderComponent } from './article-list-header/article-list-h
     ArticleComponent,
     ArticleListComponent,
     ArticleListHeaderComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    appRoutes
   ],
   providers: [ArticleService],
   bootstrap: [AppComponent]

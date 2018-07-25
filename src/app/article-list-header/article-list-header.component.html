@@ -1,7 +1,7 @@
 <div class="ui basic">
   <h1 class="ui header">News</h1>
   <div class="ui grid">
-    <div class="left floate column">
+    <div class="ten wide column">
       <div class="ui buttons">
         <button class="ui left attached icon mini blue button" (click)="changeDirection()">
           <i
@@ -20,9 +20,13 @@
         </div>
       </div>
     </div>
-    <div class="right floated column">
+    <div class="six wide column">
       <div class="ui fluid icon input">
-        <input type="text" placeholder="Search..."/>
+        <input 
+          type="text" 
+          placeholder="Search..."
+          (keyup)="liveSearch($event)"
+          />
         <i class="search icon"></i>
       </div>
     </div>

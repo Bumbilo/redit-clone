@@ -47,7 +47,7 @@ export class ArticleService {
 
   private _sortByDirectionSubject: BehaviorSubject<number> =
     new BehaviorSubject(1);
-  
+
   private _filterBySubject: BehaviorSubject<string> =
     new BehaviorSubject('');
 
@@ -61,11 +61,13 @@ export class ArticleService {
     this.orderedArticles = Observable.combineLatest(
       this._articles,
       this._sortByFilterSubject,
-      this._sortByDirectionSubject
-    ).map(([
-      articles, sorter, direction
-    ]) => {
-      return articles.sort(sorter(direction))
+      this._sortByDirectionSubject,
+      this._filterBySubject
+    ).map(([articles, sorter, direction, filterStr]) => {
+      const re = new RegExp(filterStr, 'gi')
+      return articles
+        .filter(a => re.exec(a.title))
+        .sort(sorter(direction));
     });
 
   }
@@ -74,6 +76,10 @@ export class ArticleService {
     console.log('sortBy work next()');
     this._sortByDirectionSubject.next(direction);
     this._sortByFilterSubject.next(sortFns[filter]);
+  }
+
+  public filterBy(filter: string): void {
+    this._filterBySubject.next(filter);
   }
 
   public getArticles(): void {
@@ -87,12 +93,12 @@ export class ArticleService {
 
   private _makeHttpRequest(path: string, sourceKey: string): Observable<any> {
     // Set query parameters
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('apiKey', environment.newApiKey)
       .set('q', sourceKey);
     // Return Http request
     return this.http
       .get(`${environment.baseUrl}${path}`, { params })
-      .map(resp => resp)
+      .map(resp => resp);
   }
 }
