@@ -42,6 +42,9 @@ export class ArticleService {
   private _articles: BehaviorSubject<Article[]> =
     new BehaviorSubject<Article[]>([]);
 
+  private _sources: BehaviorSubject<any> =
+    new BehaviorSubject<any>([]);
+
   private _source: BehaviorSubject<any> =
     new BehaviorSubject<any>([]);
 
@@ -54,6 +57,7 @@ export class ArticleService {
   private _sortByFilterSubject: BehaviorSubject<ArticleSortOrderFn> =
     new BehaviorSubject<ArticleSortOrderFn>(sortByTime);
 
+  public sources: Observable<any> = this._sources.asObservable();
   public articles: Observable<Article[]> = this._articles.asObservable();
   public orderedArticles: Observable<Article[]>;
 
@@ -87,11 +91,17 @@ export class ArticleService {
       .map(json => json.articles)
       .subscribe(ariclesJSON => {
         const articles = ariclesJSON.map(articJSON => Article.fromJSON(articJSON));
-        this._articles.next(articles)
+        this._articles.next(articles);
       });
   }
 
-  private _makeHttpRequest(path: string, sourceKey: string): Observable<any> {
+  public getSources() {
+    this._makeHttpRequest('/v2/sources')
+      .map(json => json.sources)
+      .subscribe(this._sources);
+  }
+
+  private _makeHttpRequest(path: string, sourceKey: string = 'anglar'): Observable<any> {
     // Set query parameters
     const params = new HttpParams()
       .set('apiKey', environment.newApiKey)

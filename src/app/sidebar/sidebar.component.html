@@ -4,11 +4,10 @@
       <div class="header">News source</div>
     </div>
     <div class="item">
-      <a href="#" class="item news-item" *ngFor="let source of sources | async">
+      <a routerLink="/news/{{source.id}}" class="item news-item" *ngFor="let source of sources | async">
         <span class="side-news-item">
-          <img src="{{ source[" urlToLogos "]["small "] }}" alt="" class="ui avatar image"/>
           <span class="side-news-item">
-              {{ source['name'] }}
+              {{ source.name }}
           </span>
         </span>
       </a>
