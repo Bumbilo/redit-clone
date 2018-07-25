@@ -66,10 +66,12 @@ export class ArticleService {
       articles, sorter, direction
     ]) => {
       return articles.sort(sorter(direction))
-    })
+    });
+
   }
 
   public sortBy(filter: string, direction: number): void {
+    console.log('sortBy work next()');
     this._sortByDirectionSubject.next(direction);
     this._sortByFilterSubject.next(sortFns[filter]);
   }

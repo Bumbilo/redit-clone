@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Article } from '../article.model';
 import { ArticleService } from '../article.service';
 
@@ -15,11 +15,11 @@ export class ArticleListComponent implements OnInit {
   constructor(
     private articleService: ArticleService
   ) {
-    this.articles = articleService.articles;
-   }
+    this.articles = articleService.orderedArticles;
+  }
 
   ngOnInit() {
-    this.articleService.getArticles()
+    this.articleService.getArticles();
   }
 
 }

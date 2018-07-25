@@ -14,12 +14,12 @@ export class ArticleListHeaderComponent implements OnInit {
 
   constructor(private articleService: ArticleService) { }
 
-  changeDirection() {
+  changeDirection(): void {
     this.sortDirection = this.sortDirection * -1;
-    this._updateSort()
+    this._updateSort();
   }
 
-  changeSort(filter: string) {
+  changeSort(filter: string): void {
     if (filter === this.currentFilter) {
       this.changeDirection();
     } else {
@@ -28,7 +28,7 @@ export class ArticleListHeaderComponent implements OnInit {
     }
   }
 
-  _updateSort() {
+  _updateSort(): void {
     this.articleService.sortBy(this.currentFilter, this.sortDirection);
   }
 
