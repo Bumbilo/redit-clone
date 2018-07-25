@@ -48,6 +48,9 @@ export class ArticleService {
   private _source: BehaviorSubject<any> =
     new BehaviorSubject<any>([]);
 
+  private _refreshSubject: BehaviorSubject<string> =
+    new BehaviorSubject<string>('front-end');
+
   private _sortByDirectionSubject: BehaviorSubject<number> =
     new BehaviorSubject(1);
 
@@ -62,6 +65,9 @@ export class ArticleService {
   public orderedArticles: Observable<Article[]>;
 
   constructor(private http: HttpClient) {
+    this._refreshSubject
+      .subscribe(this.getArticles.bind(this));
+
     this.orderedArticles = Observable.combineLatest(
       this._articles,
       this._sortByFilterSubject,
@@ -86,8 +92,12 @@ export class ArticleService {
     this._filterBySubject.next(filter);
   }
 
-  public getArticles(): void {
-    this._makeHttpRequest('/v2/everything', 'front-end')
+  public updateArticles(sourceKey): void {
+    this._refreshSubject.next(sourceKey);
+  }
+
+  public getArticles(sourceKey = 'front-end'): void {
+    this._makeHttpRequest('/v2/everything', sourceKey)
       .map(json => json.articles)
       .subscribe(ariclesJSON => {
         const articles = ariclesJSON.map(articJSON => Article.fromJSON(articJSON));
